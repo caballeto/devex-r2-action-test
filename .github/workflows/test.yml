@@ -1,0 +1,23 @@
+name: setup-devhelm smoke test
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install DevHelm CLI
+        uses: devhelmhq/setup-devhelm@v1
+        with:
+          api-token: ${{ secrets.DEVHELM_API_TOKEN }}
+          verify-connection: true
+
+      - name: Confirm CLI is on PATH and authenticated
+        run: |
+          devhelm --version
+          devhelm monitors list --output json | head -5
