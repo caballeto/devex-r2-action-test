@@ -1,0 +1,36 @@
+name: setup-devhelm conflict test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  caller-provides-node:
+    name: Caller provides setup-node@v4 first (default node-version=20)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: devhelmhq/setup-devhelm@v1
+        with:
+          api-token: ${{ secrets.DEVHELM_API_TOKEN }}
+      - run: |
+          node --version
+          devhelm --version
+
+  caller-skips-node:
+    name: Caller skips action's setup-node by passing node-version=''
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: devhelmhq/setup-devhelm@v1
+        with:
+          api-token: ${{ secrets.DEVHELM_API_TOKEN }}
+          node-version: ''
+      - run: |
+          node --version
+          devhelm --version
